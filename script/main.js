@@ -96,8 +96,7 @@ function task6(){
     document.write(getArr(arr));
 }
 
-//task7  ============================================
-//При вводе доп. параметра не выводится ничего.
+//task7
 function task7(){
     let height = prompt(`Введите высоту треугольника: `);
 
@@ -131,7 +130,7 @@ function task8(){
     function rev_isoscelesPyramid(height){    
         let weight = (height - 1);
         let symbol = `*`;
-        let space =  `&nbsp`;
+        let space =  `&nbsp`; // непропускаемый пробел
         for (let i = 1; i <= weight + 1; i++){
             document.write(
                 space.repeat(i) + symbol.repeat(height) + space.repeat(i) +`<br>`
@@ -195,7 +194,7 @@ function task11(){
     recursionArray([1,7,3,8,2])
 }
 
-//task 12 ================================================
+//task 12 
 function task12(){
     function studentData(){
         let name = prompt(`Ваше имя`),
@@ -203,59 +202,129 @@ function task12(){
             patronymic = prompt(`Ваше отчество`),
             group = prompt(`Ваша группа`);
 
-        let str1 = `* Выполнил: студент гр. ${group} `,
-            str2 = `* ${surname} ${name} ${patronymic} `;
+        let str1 = `* Выполнил: студент гр. ${group}`,
+            str2 = `* ${surname} ${name} ${patronymic}`;
+            str3 = `* Домашняя работа: "Фунции"`;
         
         let len = 0,
             len1 = str1.length,
             len2 = str2.length;
-        len1 > len2 ? len = len1 : len = len2;
-
+        
+        // добавляем к длине строки 2, т.к. учитываются * и пробел
+        // в конце строки
+        len1 > len2 ? len = len1 + 2 : len = len2 + 2;        
         let frame = `*`.repeat(len) + `\n`;
 
-        let message = (frame +
-            `* Домашняя работа: "Фунции" ` + `*\n` +
-            str1 + `*\n` +
-            str2 + `*\n` +
+        let message = (
+            frame +
+            fillString(str3, len) +
+            fillString(str1, len) +
+            fillString(str2, len) +
             frame
         );
         console.log(message);
+    }
+
+    // создаём функцию для заполнения пробелов в конце строк
+    // и выравнивания рамки по длине строки
+    function fillString(str, len){
+        let space =  ` `;
+        let symbol = `*`;
+        let diff = len - str.length; //разница в длине рамки и строки
+        //заполняем строки недостающими пробелами и символом рамки
+        let filled_str = (str + space.repeat(diff-1) + symbol + '\n');
+        return filled_str;
     }
 
     document.write(`См. вывод в консоли`);
     studentData();
 }
 
-//task 13 ================================================
+//task 13
 function task13(){
     function validation(){
-        let email = prompt(`Введите email`);
-        let ru_alph = [
-            'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з',
-            'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р',
-            'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ',
-            'э', 'ю', 'я'];
-        let RU_alph = [
-            'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З',
-            'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р',
-            'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ',
-            'Ь', 'Ы', 'Ъ', 'Э', 'Ю', 'Я'];
-        
-        let uncorrect_special_sym = [
-            `!`, `#`, `$`, `%`, `^`, `&`, `*`, `(`, `)`, `-`,
-            `+`, `=`, `[`, `]`, `{`, `}`, `'`, `"`, `<`, `>`,
-            `/`, `?`, `\\`, `|`, `\``];
-
-        let special_sym = [`@`, `-`, `_`, `.`];
-
-        if (email.includes(ru_alph) || email.includes(RU_alph)){
-            alert(`Неверный email. Содержаться русские буквы`);
-        } else if (email.includes(uncorrect_special_sym)){
-            alert(
-                `Введены некорректные спецсимволы. Разрешены лишь @, -, _ и .`
-            );
-        } else if(email[0] == special_sym || email[-1] == special_sym){
-            `Адресс не может начинаться со специального символа`
+        let email;
+        while (true) {
+            email = prompt('Введите email');
+            switch (true) {
+                case (email.search(/[А-яЁё]/) !== -1):
+                    alert('Почта не должна содержать русских букв. Введите почту заново');
+                    continue;
+                case (email.search(/[,!&?]/) !== -1):
+                    alert('Почта не должна содержать подобные символы. Введите почту заново');
+                    continue;
+    
+                case (email.split('@').length - 1 > 1):
+                    alert('Почта не должна содержать более одного символа "@". Введите почту заново');
+                    continue; 
+                case (email.split('.').length - 1 > 1):
+                    alert('Почта не должна содержать более одной точки. Введите почту заново');
+                    continue;
+                case (email.split('_').length - 1 > 1):
+                    alert('Почта не должна содержать более одного символа "_". Введите почту заново');
+                    continue;                           
+                case (email.split('-').length - 1 > 1):
+                    alert('Почта не должна содержать более одного символа "-". Введите почту заново');
+                    continue;
+    
+                case (email.indexOf('@') == 0 || email.indexOf('@') == email.length - 1):
+                    alert('Почта не должна начинаться или заканчиваться знаком "@". Введите почту заново');
+                    continue;                
+                case (email.indexOf('.') == 0 || email.indexOf('.') == email.length - 1):
+                    alert('Почта не должна начинаться или заканчиваться точкой. Введите почту заново');
+                    continue;               
+                case (email.indexOf('_') == 0 || email.indexOf('_') == email.length - 1):
+                    alert('Почта не должна начинаться или заканчиваться знаком "_". Введите почту заново');
+                    continue;              
+                case (email.indexOf('-') == 0 || email.indexOf('-') == email.length - 1):
+                    alert('Почта не должна начинаться или заканчиваться знаком "-". Введите почту заново');
+                    continue;  
+    
+                case (
+                    email.indexOf('@') + 1 == email.indexOf('.') || email.indexOf('@') - 1 == email.indexOf('.') ||
+                    email.indexOf('@') + 1 == email.indexOf('_') || email.indexOf('@') - 1 == email.indexOf('_') ||
+                    email.indexOf('@') + 1 == email.indexOf('-') || email.indexOf('@') - 1 == email.indexOf('-')
+                ):
+                    alert('Почта не должна содержать несколько спец. символов подряд. Введите почту заново');
+                    continue;
+                case (
+                    email.indexOf('.') + 1 == email.indexOf('@') || email.indexOf('.') - 1 == email.indexOf('@') ||
+                    email.indexOf('.') + 1 == email.indexOf('_') || email.indexOf('.') - 1 == email.indexOf('_') ||
+                    email.indexOf('.') + 1 == email.indexOf('-') || email.indexOf('.') - 1 == email.indexOf('-')
+                ):
+                    alert('Почта не должна содержать несколько спец. символов подряд. Введите почту заново');
+                    continue;
+                case (
+                    email.indexOf('_') + 1 == email.indexOf('@') || email.indexOf('_') - 1 == email.indexOf('@') ||
+                    email.indexOf('_') + 1 == email.indexOf('.') || email.indexOf('_') - 1 == email.indexOf('.') ||
+                    email.indexOf('_') + 1 == email.indexOf('-') || email.indexOf('_') - 1 == email.indexOf('-')
+                ):
+                    alert('Почта не должна содержать несколько спец. символов подряд. Введите почту заново');
+                    continue;
+                case (
+                    email.indexOf('-') + 1 == email.indexOf('@') || email.indexOf('-') - 1 == email.indexOf('@') ||
+                    email.indexOf('-') + 1 == email.indexOf('.') || email.indexOf('-') - 1 == email.indexOf('.') ||
+                    email.indexOf('-') + 1 == email.indexOf('_') || email.indexOf('-') - 1 == email.indexOf('_')
+                ):
+                    alert('Почта не должна содержать несколько спец. символов подряд. Введите почту заново');
+                    continue;
+    
+                case (email.split('@')[1].length <= 3):
+                    alert('После знака "@" должно быть больше 2 символов. Введите почту заново');
+                    continue;
+                case (email.split('@')[1].length > 11):
+                    alert('После знака "@" должно быть менее 11 символов. Введите почту заново');
+                    continue;
+                case (email.split('@')[0].length < 2):
+                    alert('До знака "@" должно быть больше 2 символов. Введите почту заново');
+                    continue;
+                case true:        
+                    break;
+            }
+            break;
         }
+        document.write(email); 
     }
+
+    validation();
 }
